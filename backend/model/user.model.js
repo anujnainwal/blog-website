@@ -26,6 +26,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
+      select: false,
       required: true,
     },
     postCount: {
@@ -70,7 +71,15 @@ const userSchema = new Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Users",
+          ref: "User",
+        },
+      ],
+    },
+    following: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
         },
       ],
     },
@@ -92,11 +101,11 @@ const userSchema = new Schema(
 //prefiend
 userSchema.pre("save", async function (next) {
   const user = this;
-  if (user.isModified("password")) {
-    next();
+  if (!user.isModified("password")) {
+    return next();
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(user.password, salt);
+  let salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
   next();
 });
 
