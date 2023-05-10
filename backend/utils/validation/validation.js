@@ -30,10 +30,18 @@ const checkPassword = joi.object({
   newPassword: joi.string().min(8).max(50).required().trim(),
 });
 
+const createPostvalidation = joi.object({
+  title: joi.string().min(1).max(40).required().trim().normalize(),
+  description: joi.string().min(10).max(1000).required().trim().normalize(),
+  // author: joi.string().required().trim(),
+  category: joi.string().required().min(3).max(200).trim(),
+});
+
 module.exports = {
   registerValidation,
   loginValidation,
   checkValidId,
   checkPassword,
+  createPostvalidation,
   profileUpdate,
 };

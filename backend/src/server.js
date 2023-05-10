@@ -67,7 +67,7 @@ app.get("/", (req, res, next) => {
 
 //routes defined here.
 app.use("/api/v1/user", require("../router/user.routes.js"));
-// app.use('/api/v1/post')
+app.use("/api/v1/post", require("../router/post.routes.js"));
 
 //not found error Handler
 app.use(notFound404);
