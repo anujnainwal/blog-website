@@ -39,7 +39,7 @@ const profilePicResize = async (req, res, next) => {
   profile.filename = `user-${crypto.randomUUID()}-${profile.originalname}`;
 
   await sharp(profile.buffer)
-    .resize(600, 600)
+    .resize(500, 500)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(
@@ -52,5 +52,50 @@ const profilePicResize = async (req, res, next) => {
     );
   next();
 };
+const postImageResize = async (req, res, next) => {
+  const post = req.file;
 
-module.exports = { upload, profilePicResize };
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ status: 0, error: "Profile Pic is required." });
+  }
+
+  const maxWidth = 1200; // Maximum width for the resized image
+  const maxHeight = 1200; // Maximum height for the resized image
+  const quality = 80; // JPEG compression quality (0-100)
+
+  const fileExtension = post.originalname.split(".").pop();
+  const randomFileName = `user-${crypto.randomUUID()}.${fileExtension}`;
+
+  const resizedImagePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "public",
+    "images",
+    "post",
+    randomFileName
+  );
+
+  try {
+    await sharp(post.buffer)
+      .resize({
+        width: maxWidth,
+        height: maxHeight,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: quality })
+      .toFile(resizedImagePath);
+
+    post.filename = randomFileName;
+    next();
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error resizing image:", error);
+    return res.status(500).json({ status: 0, error: "Image resizing failed." });
+  }
+};
+
+module.exports = { upload, profilePicResize, postImageResize };

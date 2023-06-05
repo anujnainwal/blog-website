@@ -46,7 +46,7 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-    image: {
+    blogImage: {
       type: String,
       default: "https://wmmedia.sgp1.cdn.digitaloceanspaces.com/blog.png",
     },

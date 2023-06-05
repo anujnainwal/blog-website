@@ -2,7 +2,6 @@ const nodemailer = require("nodemailer");
 const { config } = require("../../config/config");
 const ejs = require("ejs");
 const path = require("path");
-console.log("sadsadsd");
 
 const sendEmail = async (
   email,

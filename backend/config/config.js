@@ -24,6 +24,8 @@ const whiteList = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:7000",
+  "https://blog-backend-xq2z.onrender.com",
+  "https://blog-1999.netlify.app",
 ];
 //cors options
 
@@ -35,7 +37,7 @@ exports.corsOption = {
       return callback("Not Allowed by cors.");
     }
   },
-  credentials: 200,
+  credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 200,
 };
