@@ -22,7 +22,7 @@ export const loginUser = createAsyncThunk(
       const response = await privateAxios.post("/user/login", user);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error?.response);
     }
   }
 );

@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Avatar, Button, Drawer, Dropdown, Layout, Space, Switch } from "antd";
 import { AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import "./asset/css/style.css";
+
+import { useSelector } from "react-redux";
 let { Header } = Layout;
-const token = localStorage.getItem("accessToken");
+
 const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
 
 const Navbar = () => {
+  let user = useSelector((state) => state.auth);
   let [showDrawer, setShowDrawer] = useState(false);
   let navigate = useNavigate();
   const handleLogout = () => {
-    console.log("logout");
-    localStorage.removeItem("isLoggedIn");
-
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("accessToken");
-    // localStorage.clear();
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -29,6 +27,10 @@ const Navbar = () => {
     {
       label: <a href="https://www.aliyun.com">Change Password</a>,
       key: "1",
+    },
+    user.user.isAdmin === true && {
+      label: <a href="https://www.aliyun.com">User Account Panel</a>,
+      key: "2",
     },
     {
       type: "divider",
@@ -73,25 +75,27 @@ const Navbar = () => {
                     <li className="me-5">
                       <NavLink to="/contact">Contact</NavLink>
                     </li>
-                    {isLoggedIn ? (
-                      <Dropdown
-                        menu={{
-                          items,
-                        }}
-                        trigger={["click"]}
-                        className="me-3 mb-2"
-                      >
-                        <NavLink onClick={(e) => e.preventDefault()}>
-                          <Space>
-                            <Avatar
-                              shape="square"
-                              size={40}
-                              src={"https://i.redd.it/emgudeta7e161.jpg"}
-                              icon={<AiOutlineUser />}
-                            />
-                          </Space>
-                        </NavLink>
-                      </Dropdown>
+                    {isLoggedIn === true ? (
+                      <>
+                        <Dropdown
+                          menu={{
+                            items,
+                          }}
+                          trigger={["click"]}
+                          className="me-3 mb-2"
+                        >
+                          <NavLink onClick={(e) => e.preventDefault()}>
+                            <Space>
+                              <Avatar
+                                shape="square"
+                                size={40}
+                                src={"https://i.redd.it/emgudeta7e161.jpg"}
+                                icon={<AiOutlineUser />}
+                              />
+                            </Space>
+                          </NavLink>
+                        </Dropdown>
+                      </>
                     ) : (
                       <>
                         <li className="me-5">
@@ -124,24 +128,30 @@ const Navbar = () => {
                   <NavLink to="/contact">Contact</NavLink>
                 </li>
                 {isLoggedIn ? (
-                  <Dropdown
-                    menu={{
-                      items,
-                    }}
-                    trigger={["click"]}
-                    className="me-3 mb-2"
-                  >
-                    <NavLink onClick={(e) => e.preventDefault()}>
-                      <Space>
-                        <Avatar
-                          shape="square"
-                          size={40}
-                          src={"https://i.redd.it/emgudeta7e161.jpg"}
-                          icon={<AiOutlineUser />}
-                        />
-                      </Space>
+                  <>
+                    <NavLink className="me-5" to="/createCategories">
+                      Create Categories
                     </NavLink>
-                  </Dropdown>
+
+                    <Dropdown
+                      menu={{
+                        items,
+                      }}
+                      trigger={["click"]}
+                      className="me-3 mb-2"
+                    >
+                      <NavLink onClick={(e) => e.preventDefault()}>
+                        <Space>
+                          <Avatar
+                            shape="square"
+                            size={40}
+                            src={"https://i.redd.it/emgudeta7e161.jpg"}
+                            icon={<AiOutlineUser />}
+                          />
+                        </Space>
+                      </NavLink>
+                    </Dropdown>
+                  </>
                 ) : (
                   <>
                     <li className="me-5">

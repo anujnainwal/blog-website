@@ -6,45 +6,29 @@ import "./asset/css/login.css";
 import BgImage from "../../assets/images/common.png";
 import { loginUser } from "../../fetures/slices/user/userThunk";
 import MessageResponse from "../../message/MessageResponse";
-import Loader from "../../utils/loader/Loader";
 
 const Login = () => {
   const { Title } = Typography;
-  let dispatch = useDispatch();
   let isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
 
+  let dispatch = useDispatch();
   let navigate = useNavigate();
-  let {
-    isLoading,
-    isError,
-    isSuccess,
-    user,
-    accessToken,
-    errorMessage,
-    statusCode,
-    successMessage,
-  } = useSelector((state) => state.auth);
-
+  const onFinish = async (value) => {
+    console.log(value);
+    dispatch(loginUser(value));
+  };
+  const user = useSelector((state) => state.auth);
   useEffect(() => {
     if (isLoggedIn === true) {
       navigate("/");
     }
-  }, [isLoggedIn, navigate]);
-
-  const onFinish = async (value) => {
-    try {
-      dispatch(loginUser(value));
-      if (isSuccess) {
-        MessageResponse({ type: "success", content: "login success" });
-        return navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
+    if (user.isSuccess === true) {
+      MessageResponse({ type: "success", content: user.successMessage });
+      navigate("/");
+    } else if (user.isError === true) {
+      MessageResponse({ type: "error", content: user.errorMessage });
     }
-  };
-  if (isLoading === true) {
-    return <Loader />;
-  }
+  }, [user, navigate, isLoggedIn]);
   return (
     <Row className="loginContainer">
       <Col xs={24} sm={24} md={12} lg={12} className="leftPanel">

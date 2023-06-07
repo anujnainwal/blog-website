@@ -16,7 +16,7 @@ const refreshToken = async (user) => {
   let token = new TokenModel({
     userId: user._id,
     refreshToken: refreshToken,
-    expiresIn: new Date(Date.now() + 2 * 60 * 60 * 1000),
+    expireAt: new Date(Date.now() + 2 * 60 * 60 * 1000),
   });
   await token.save();
   return refreshToken;

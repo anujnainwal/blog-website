@@ -1,18 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser } from "./userThunk";
+import { loginUser } from "./userThunk";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("userInfo"));
 let accessToken = JSON.parse(localStorage.getItem("accessToken"));
-
+let refreshToken = JSON.parse(localStorage.getItem("refreshToken"));
 let initialState = {
   isLoading: false,
   isError: false,
-  user: user ? user : null,
+  user: user ? user : undefined,
   isSuccess: false,
   errorMessage: undefined,
   statusCode: undefined,
   successMessage: undefined,
   accessToken: accessToken ? accessToken : undefined,
+  refreshToken: refreshToken ? refreshToken : undefined,
 };
 
 let registerSlice = createSlice({
@@ -20,54 +21,41 @@ let registerSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    //register
-    builder.addCase(registerUser.pending, (state, action) => {
-      state.isLoading = true;
-    });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.user = action.payload;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.user = null;
-      state.isSuccess = false;
-      state.message = action.payload;
-    });
-    //login
     builder.addCase(loginUser.pending, (state, action) => {
       state.isLoading = true;
-      state.isError = undefined;
-
-      state.isSuccess = undefined;
+      state.isError = false;
+      state.user = undefined;
+      state.isSuccess = false;
       state.errorMessage = undefined;
       state.statusCode = undefined;
-    });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      let { accessToken, message, status, userInfo } = action.payload;
-
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.statusCode = status;
-      state.successMessage = message;
-      state.accessToken = accessToken;
-      state.user = userInfo;
-    });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      let { data, status } = action.payload.response;
-      state.isLoading = false;
-      state.isError = true;
-
-      localStorage.setItem("userInfo", JSON.stringify(data));
-
-      state.isSuccess = false;
-      state.errorMessage = data.error;
-      state.statusCode = status;
       state.successMessage = undefined;
       state.accessToken = undefined;
-      state.user = undefined;
+    });
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      let { status, message, userInfo, accessToken, refreshToken } =
+        action.payload;
+      localStorage.setItem("isLoggedIn", true);
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      localStorage.setItem("accessToken", JSON.stringify(accessToken));
+      localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+      state.isSuccess = true;
+      state.successMessage = message;
+      state.user = userInfo;
+      state.statusCode = status;
+      state.accessToken = accessToken;
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.isLoading = false;
+      let {
+        status,
+        data: { error },
+      } = action.payload;
+      localStorage.clear();
+      state.isError = true;
+      state.isSuccess = false;
+      state.statusCode = status;
+      state.errorMessage = error;
     });
   },
 });
