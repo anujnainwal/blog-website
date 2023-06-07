@@ -26,3 +26,16 @@ export const fetchAllCategory = createAsyncThunk(
     }
   }
 );
+
+export const deleteCategory = createAsyncThunk(
+  "category/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      let response = await privateAxios.delete("/category/deletecategory/" + id);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response);
+    }
+  }
+);

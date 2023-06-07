@@ -1,24 +1,27 @@
 import { Button, Form, Input } from "antd";
-import React, { useEffect,  } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategories } from "../../fetures/slices/category/categoryThunk";
 import MessageResponse from "../../message/MessageResponse";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const CategoriesForm = () => {
-let navigate = useNavigate()
+  let navigate = useNavigate();
   let dispatch = useDispatch();
+
+  let category = useSelector((state) => state.categorySlice);
+  useEffect(() => {
+    if (category.isError === true) {
+      MessageResponse({ type: "error", content: category.errorMessage });
+    }
+  }, [category]);
   let onFinish = (value) => {
     dispatch(createCategories(value));
-    navigate('/categoryList')
-  };
-  let category = useSelector(state=>state.categorySlice)
-  useEffect(()=>{
-    if(category.isError === true){
-      MessageResponse({type: 'error', content:category.errorMessage});
+    if (category.isSuccess) {
+     
+      navigate("/categoryList");
     }
-    
-  },[category])
+  };
 
   return (
     <div className="w-100 ">

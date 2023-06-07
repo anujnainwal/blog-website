@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createCategories, fetchAllCategory } from "./categoryThunk";
+import { createCategories, deleteCategory, fetchAllCategory } from "./categoryThunk";
 
 const initialState = {
   isLoading: false,
@@ -28,6 +28,7 @@ const categorySlice = createSlice({
     });
     builder.addCase(fetchAllCategory.fulfilled, (state, action) => {
       state.isLoading = false;
+      console.log(action.payload)
       let { categoryInfo, message } = action.payload;
 
       state.isSuccess = true;
@@ -67,6 +68,22 @@ const categorySlice = createSlice({
       state.errorMessage = error;
       state.statusCode = status;
     });
+    
+    //delete category
+    builder.addCase(deleteCategory.pending,(state, action) => {
+      state.isLoading = true;
+    })
+    builder.addCase(deleteCategory.fulfilled,(state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.successMessage = action.payload.message
+
+    })
+    builder.addCase(deleteCategory.rejected,(state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.errorMessage = action.payload.error
+    })
   },
 });
 export default categorySlice.reducer;

@@ -8,6 +8,7 @@ import ForgetPassword from "../auth/forget/ForgetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import CreateCategories from "../pages/category/CreateCategories";
 import CategoryList from "../pages/category/CategoryList";
+import Post from "../pages/post/Post";
 
 const MainRouter = () => {
   return (
@@ -17,6 +18,7 @@ const MainRouter = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/createCategories" element={<CreateCategories />} />
           <Route path="/categoryList" element={<CategoryList />} />
+          <Route path="/post" element={<Post />} />
         </Route>
 
         <Route path="/register" element={<Register />} />

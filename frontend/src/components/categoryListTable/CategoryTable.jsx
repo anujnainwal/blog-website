@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCategory } from "../../fetures/slices/category/categoryThunk";
+import { deleteCategory, fetchAllCategory } from "../../fetures/slices/category/categoryThunk";
 import { Avatar, Button, Form, Input, Popconfirm, Table } from "antd";
 import CommonModal from "../commonModal/CommonModal";
 
@@ -14,7 +14,10 @@ const CategoryTable = () => {
     setEditId(data._id);
     setEditText(data.title);
     setOpenModal(true);
-  };
+  };  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllCategory());
+  }, [dispatch]);
 
   const columns = [
     {
@@ -28,7 +31,7 @@ const CategoryTable = () => {
       title: "Author",
       width: 50,
       dataIndex: "userId",
-      key: "userId",
+      key: "_id",
       fixed: "left",
       render: (data) => (
         <div>
@@ -41,19 +44,19 @@ const CategoryTable = () => {
       title: "Category Title",
       width: 50,
       dataIndex: "title",
-      key: "title",
+      key: "_id",
       fixed: "left",
     },
     {
       title: "Created At",
       width: 50,
       dataIndex: "createdAt",
-      key: "createdAt",
+      key: "_id",
       fixed: "left",
     },
     {
       title: "Action",
-      key: "operation",
+      key: "_id",
       fixed: "right",
       width: 50,
       render: (data) => (
@@ -62,22 +65,21 @@ const CategoryTable = () => {
           <Popconfirm
             placement="topRight"
             title="Are you sure you want to delete this?"
-            okText="Yes"
-            cancelText="No"
+            onConfirm={()=>{dispatch(deleteCategory(data._id));dispatch(fetchAllCategory())}}
+            onCancel={()=>alert('Cancelled')}
+            okText="Delete"
+            cancelText="Cancel"
           >
-            <Button>Delete</Button>
+            <Button danger>Delete</Button>
           </Popconfirm>
         </>
       ),
     },
   ];
 
-  const dispatch = useDispatch();
+
   const category = useSelector((state) => state.categorySlice);
 
-  useEffect(() => {
-    dispatch(fetchAllCategory());
-  }, [dispatch]);
 
   const data = Array.isArray(category.categories) ? category.categories : [];
 
@@ -88,6 +90,7 @@ const CategoryTable = () => {
   const onFinish = (values) => {
     console.log("Form values:", values);
   };
+
 
   return (
     <div>
@@ -104,24 +107,35 @@ const CategoryTable = () => {
               margin: "auto",
               maxWidth: 600,
             }}
+            initialValues={[editId,editText]}
+      
             onFinish={onFinish}
           >
             <Form.Item
-              name="categoryId"
+              name={[editId,'categoryId']}
               label="Category ID"
-              initialValue={editId}
               hasFeedback
+              initialValue={editId}
+            
+              
             >
-              <Input readOnly />
+             
+              <Input  readOnly />
             </Form.Item>
 
             <Form.Item
-              name="categoryName"
+              name={[editText,'categoryName']}
               label="Category Name"
               initialValue={editText}
               hasFeedback
+              rules={[{
+                required: 'Category Name is required',
+                min: 5,
+                max: 20
+                
+              }]}
             >
-              <Input />
+              <Input type="text" placeholder="Enter category name" />
             </Form.Item>
 
             <Form.Item>
@@ -136,6 +150,7 @@ const CategoryTable = () => {
       <Table
         columns={columns}
         dataSource={data}
+        loading={category.isLoading}
         scroll={{ x: 1300 }}
       />
     </div>

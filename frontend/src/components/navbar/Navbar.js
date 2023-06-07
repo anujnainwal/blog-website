@@ -70,11 +70,9 @@ const Navbar = () => {
                       <NavLink to="/">Home</NavLink>
                     </li>
                     <li className="me-5">
-                      <NavLink to="/about">About</NavLink>
+                      <NavLink to="/post">Post</NavLink>
                     </li>
-                    <li className="me-5">
-                      <NavLink to="/contact">Contact</NavLink>
-                    </li>
+              
                     {isLoggedIn === true ? (
                       <>
                         <Dropdown
@@ -121,16 +119,17 @@ const Navbar = () => {
                 <li className="me-5">
                   <NavLink to="/">Home</NavLink>
                 </li>
+         
                 <li className="me-5">
-                  <NavLink to="/about">About</NavLink>
-                </li>
-                <li className="me-5">
-                  <NavLink to="/contact">Contact</NavLink>
-                </li>
+                      <NavLink to="/post">Post</NavLink>
+                    </li>
                 {isLoggedIn ? (
                   <>
                     <NavLink className="me-5" to="/createCategories">
                       Create Categories
+                    </NavLink>
+                    <NavLink className="me-5" to='/categoryList'>
+                      Category List
                     </NavLink>
 
                     <Dropdown
