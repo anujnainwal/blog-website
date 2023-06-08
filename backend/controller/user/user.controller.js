@@ -610,12 +610,12 @@ exports.profileUpdate = async (req, res, next) => {
   }
 };
 
-exports.refreshToken = async () => {
+exports.refreshToken = async (req,res,next) => {
   try {
     const { refreshToken, userId } = req.body;
-    if (!ObjecId.isValid(userId)) {
-      return res.status(400).json({ error: "Invalid Id" });
-    }
+    // if (!ObjecId.isValid(userId)) {
+    //   return res.status(400).json({ error: "Invalid Id" });
+    // }
     const token = await TokenModel.findOne({ refreshToken: refreshToken });
     if (!token) {
       return res.status(404).json({ error: "Token not found" });
@@ -631,7 +631,7 @@ exports.refreshToken = async () => {
     }
     const user = {
       _id: userId,
-      role: role,
+     
     };
     const accessToken = await generateToken.accessToken(user);
     token.used = true;

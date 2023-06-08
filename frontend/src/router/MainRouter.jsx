@@ -9,6 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import CreateCategories from "../pages/category/CreateCategories";
 import CategoryList from "../pages/category/CategoryList";
 import Post from "../pages/post/Post";
+import CreatePost from "../pages/post/createPost/CreatePost";
 
 const MainRouter = () => {
   return (
@@ -18,9 +19,9 @@ const MainRouter = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/createCategories" element={<CreateCategories />} />
           <Route path="/categoryList" element={<CategoryList />} />
-          <Route path="/post" element={<Post />} />
+          <Route path="/createPost" element={<CreatePost />} />
         </Route>
-
+        <Route path="/post" element={<Post />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgetPassword" element={<ForgetPassword />} />

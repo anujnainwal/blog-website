@@ -9,9 +9,11 @@ import { useSelector } from "react-redux";
 let { Header } = Layout;
 
 const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+const userPorfile = JSON.parse(localStorage.getItem('userInfo'))
 
 const Navbar = () => {
   let user = useSelector((state) => state.auth);
+
   let [showDrawer, setShowDrawer] = useState(false);
   let navigate = useNavigate();
   const handleLogout = () => {
@@ -44,7 +46,7 @@ const Navbar = () => {
   return (
     <React.Fragment>
       <Layout>
-        <Header className="bg-white d-flex justify-center align-middle overflow-hidden">
+        <Header className="d-flex justify-center align-middle overflow-hidden" style={{background:'#ddd'}}>
           <div
             className="logo flex content-center justify-between items-center "
             style={{ height: "inherit" }}
@@ -125,6 +127,9 @@ const Navbar = () => {
                     </li>
                 {isLoggedIn ? (
                   <>
+                    <NavLink className="me-5" to="/createPost">
+                      Create Post
+                    </NavLink>
                     <NavLink className="me-5" to="/createCategories">
                       Create Categories
                     </NavLink>
@@ -144,7 +149,7 @@ const Navbar = () => {
                           <Avatar
                             shape="square"
                             size={40}
-                            src={"https://i.redd.it/emgudeta7e161.jpg"}
+                            src={userPorfile.profilePic}
                             icon={<AiOutlineUser />}
                           />
                         </Space>
@@ -162,11 +167,7 @@ const Navbar = () => {
                   </>
                 )}
                 <li>
-                  <Switch
-                    // checkedChildren={<CheckOutlined />}
-                    // unCheckedChildren={<CloseOutlined />}
-                    defaultChecked
-                  />
+                <Switch defaultChecked  />
                 </li>
               </ul>
             </div>

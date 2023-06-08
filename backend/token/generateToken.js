@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const TokenModel = require("../model/token.model");
 const accessToken = async (user) => {
   return await jwt.sign(
-    { _id: user._id, role: user.roles },
+    { _id: user._id,  },
     config.ACCESS_TOKEN,
     {
       expiresIn: config.ACCESS_TOKEN_EXPIRE,

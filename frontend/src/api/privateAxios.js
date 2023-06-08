@@ -60,7 +60,19 @@ privateAxios.interceptors.response.use(
         return privateAxios(originalConfig);
       }
     } catch (_error) {
-      console.log("fuck:::::", _error);
+      let {
+        status,
+        data: { error },
+      } = _error?.response;
+      if (
+        (status === 400 &&
+          error === "Token was expired. Please login again.") ||
+        error === "Token not found"
+      ) {
+        localStorage.clear();
+        window.location.href = "/login";
+      }
+
       return Promise.reject(_error);
     }
 
