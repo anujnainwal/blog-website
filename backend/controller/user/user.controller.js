@@ -645,3 +645,7 @@ exports.refreshToken = async (req,res,next) => {
     console.log(error);
   }
 };
+
+exports.status = async(req,res,next)=>{
+
+}

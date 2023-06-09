@@ -11,10 +11,7 @@ let userInfo = JSON.parse(localStorage.getItem("userInfo"));
 export const privateAxios = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json, application/formData",
-  },
+
 });
 
 //response interceptor
@@ -49,6 +46,10 @@ privateAxios.interceptors.response.use(
         let response = await privateAxios.post("/user/refreshToken", {
           userId: userInfo._id,
           refreshToken: refreshToken,
+        },{
+          headers:{
+            "Content-Type": "application/json"
+          }
         });
         let { accessToken } = response.data;
 
@@ -76,7 +77,7 @@ privateAxios.interceptors.response.use(
       return Promise.reject(_error);
     }
 
-    console.log("testing:::::::", err);
+    
     return Promise.reject(err);
   }
 );

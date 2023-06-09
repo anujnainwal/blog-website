@@ -1,0 +1,21 @@
+.cutoff__text{
+--max-lines: 5;
+--line-height: 1.4;
+max-height: calc(var(--max-lines) * 1em * var(--line-height));
+line-height: var(--line-height);
+overflow: hidden;
+position: relative;
+
+}
+.cutoff__text::before{
+    position: absolute;
+    content: "";
+    background: #ffffffc5;
+    background: linear-gradient(to top, #ffffffbb 0%, #f7f4f4ee 100%);
+bottom: 0;
+height: 20px;
+width: 100%;
+}
+.ant-card .ant-card-body{
+    padding: 8px !important;
+}

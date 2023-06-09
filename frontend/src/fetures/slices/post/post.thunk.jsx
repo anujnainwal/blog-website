@@ -4,6 +4,8 @@ import {privateAxios} from '../../../api/privateAxios'
 //fetchAll post 
 export const fetchAllPost = createAsyncThunk('post/fetchAllData',async (postData,{rejectWithValue})=>{
     try {
+        let response = await privateAxios.get('/post/allPost',)
+        return response.data
         
     } catch (error) {
         return rejectWithValue(error?.responseText)
@@ -12,8 +14,15 @@ export const fetchAllPost = createAsyncThunk('post/fetchAllData',async (postData
 
 //create a post ACCESS_TOKEN 
 export const createPost = createAsyncThunk('post/created',async (postData,{rejectWithValue})=>{
+    console.log('post',postData)
     try {
-        let response = await privateAxios.post('/post/createPost',postData)
+        privateAxios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+        let response = await privateAxios.post('/post/createPost',postData,{
+            headers:{
+                "Content-Type": "multipart/form-data"
+            }
+        }
+        )
         return response.data
     } catch (error) {
         return rejectWithValue(error?.responseText)

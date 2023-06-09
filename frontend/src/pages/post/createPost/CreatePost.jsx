@@ -4,8 +4,9 @@ import CardComponents from "../../../components/cardComponents/CardComponents";
 import { Button, Form, Input, Select, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCategory } from "../../../fetures/slices/category/categoryThunk";
+import { fetchAllCategory} from "../../../fetures/slices/category/categoryThunk";
 import { useForm } from "antd/es/form/Form";
+import { createPost } from "../../../fetures/slices/post/post.thunk";
 
 const CreatePost = () => {
   const [form] = useForm();
@@ -17,8 +18,19 @@ const CreatePost = () => {
   }, [dispatch]);
 
   const onFinish = (values) => {
-    let {title,category,description,file} = values
-   console.log(title, category, description, file[0])
+    let {title,category,description,postImage} = values
+    
+    let postImages = postImage[0].originFileObj
+
+   
+    
+    let postData = new FormData();
+    postData.append('title',title);
+    postData.append('category',category);
+    postData.append('description',description);
+    postData.append('postImage',postImages);
+   dispatch(createPost(postData))
+   form.resetFields()
   };
 
   const validateFile = (_, fileList) => {
@@ -125,7 +137,7 @@ const CreatePost = () => {
             </Form.Item>
             <Form.Item
               label="File"
-              name="file"
+              name="postImage"
               rules={[
                 {
                   validator: validateFile,
