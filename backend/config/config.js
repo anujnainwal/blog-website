@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 exports.config = {
-  NODE_ENVIROMENT: process.env.NODE_SERVER || "production",
+  NODE_ENVIROMENT: process.env.NODE_ENVIROMENT || "production",
   PORT: process.env.PORT || 8000,
   MONGO_URL: process.env.MONGO_URL,
   ACCESS_TOKEN: process.env.ACCESS_TOKEN,

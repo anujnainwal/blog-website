@@ -15,7 +15,7 @@ const database = () => {
     });
 };
 mongoose.connection.on("connected", () => {
-  console.log(`MongoDb Connection: Connected .`);
+  console.log(`MongoDb Connection: Connected.`);
 });
 mongoose.connection.on("error", () => {
   console.log("Error in connection");
