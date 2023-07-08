@@ -73,7 +73,7 @@ exports.Login = async (req, res, next) => {
     }
     const matchPassword = await checkEmail.matchPassword(password);
     if (!matchPassword) {
-      return res.status(401).json({ error: "Invalid Credentails." });
+      return res.status(400).json({ error: "Invalid Credentails." });
     }
     const accessToken = await generateToken.accessToken(checkEmail);
     const refreshToken = await generateToken.refreshToken(checkEmail);
@@ -610,7 +610,7 @@ exports.profileUpdate = async (req, res, next) => {
   }
 };
 
-exports.refreshToken = async (req,res,next) => {
+exports.refreshToken = async (req, res, next) => {
   try {
     const { refreshToken, userId } = req.body;
     // if (!ObjecId.isValid(userId)) {
@@ -631,7 +631,6 @@ exports.refreshToken = async (req,res,next) => {
     }
     const user = {
       _id: userId,
-     
     };
     const accessToken = await generateToken.accessToken(user);
     token.used = true;
@@ -646,6 +645,4 @@ exports.refreshToken = async (req,res,next) => {
   }
 };
 
-exports.status = async(req,res,next)=>{
-
-}
+exports.status = async (req, res, next) => {};

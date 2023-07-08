@@ -1,12 +1,24 @@
 import React from "react";
-import Navbar from "../../components/navbar/Navbar";
-import CategoriesForm from "../../components/categoriesForm/CategoriesForm";
+import NavBar from "../../components/navbar/NavBar";
+import { Box, Paper } from "@mui/material";
 
 const CreateCategories = () => {
   return (
     <React.Fragment>
-      <Navbar />
-      <CategoriesForm />
+      <NavBar />
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+            width: 300,
+            height: 200,
+          },
+        }}
+      >
+        <Paper elevation={3} />
+      </Box>
     </React.Fragment>
   );
 };

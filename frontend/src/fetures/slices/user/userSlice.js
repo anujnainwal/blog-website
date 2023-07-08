@@ -52,6 +52,7 @@ let registerSlice = createSlice({
         data: { error },
       } = action.payload;
       localStorage.clear();
+      console.log(action.payload);
       state.isError = true;
       state.isSuccess = false;
       state.statusCode = status;

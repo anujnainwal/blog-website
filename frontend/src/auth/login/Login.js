@@ -1,122 +1,173 @@
-import React, { useEffect } from "react";
-import { Button, Col, Row, Typography, Form, Input } from "antd";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import "./asset/css/login.css";
-import BgImage from "../../assets/images/common.png";
+import {
+  Box,
+  Paper,
+  TextField,
+  InputAdornment,
+  Typography,
+  Button,
+  Alert,
+  Snackbar,
+} from "@mui/material";
+import { BiLogIn } from "react-icons/bi";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../fetures/slices/user/userThunk";
-import MessageResponse from "../../message/MessageResponse";
+
+const validationSchema = yup.object().shape({
+  password: yup.string().required(),
+  email: yup.string().email().required(),
+});
 
 const Login = () => {
-  const { Title } = Typography;
-  let isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: { email: "", password: "" },
+  });
 
-  let dispatch = useDispatch();
-  let navigate = useNavigate();
-  const onFinish = async (value) => {
-    console.log(value);
+  const onSubmit = (value, e) => {
+    e.preventDefault();
     dispatch(loginUser(value));
   };
-  const user = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const userState = useSelector((state) => state.auth);
   useEffect(() => {
-    if (isLoggedIn === true) {
+    if (userState.isError === true) {
+      setOpen(true);
+    }
+    if (userState.isSuccess === true) {
+      setOpen(true);
       navigate("/");
     }
-    if (user.isSuccess === true) {
-      MessageResponse({ type: "success", content: user.successMessage });
-      navigate("/");
-    } else if (user.isError === true) {
-      MessageResponse({ type: "error", content: user.errorMessage });
-    }
-  }, [user, navigate, isLoggedIn]);
+  }, [userState, navigate]);
+
   return (
-    <Row className="loginContainer">
-      <Col xs={24} sm={24} md={12} lg={12} className="leftPanel">
-        <div className="topHeader">
-          <NavLink to="/">
-            <Button className="border-none bg-slate-600 m-5 text-white">
-              Home
-            </Button>
-          </NavLink>
-        </div>
-        <section className="login__container">
-          <Title level={2} style={{ color: "#fff", textAlign: "center" }}>
-            Sign In
-          </Title>
-          <p className="text-sm text-center text-white">
-            Sign into your account for full access
-          </p>
-          <Form
-            name="basic"
-            labelCol={{
-              span: 6,
-            }}
-            className="mt-3"
-            wrapperCol={{
-              span: 16,
-            }}
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            // onFinishFailed={onFinishFailed}
+    <div className="login_background">
+      {userState.isSuccess === true && (
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          onClose={() => setOpen(false)}
+        >
+          <Alert
+            onClose={() => setOpen(false)}
+            severity="success"
+            sx={{ width: "100%" }}
           >
-            <Form.Item
-              label={<span className="text-white me-1">Email Address</span>}
-              name="email"
-              rules={[
-                {
-                  type: "email",
-                  required: true,
-                },
-              ]}
-              hasFeedback
+            {userState.successMessage}
+          </Alert>
+        </Snackbar>
+      )}
+      {userState.isError === true && (
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          onClose={() => setOpen(false)}
+        >
+          <Alert
+            onClose={() => setOpen(false)}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {userState.errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Paper elevation={3} sx={{ padding: "20px", maxWidth: "400px" }}>
+          <Typography
+            variant="h6"
+            component="h6"
+            sx={{ textAlign: "center", marginBottom: "20px" }}
+          >
+            Login
+          </Typography>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Box>
+              <TextField
+                label="Email Address"
+                type="email"
+                size="small"
+                name="email"
+                {...register("email")}
+                sx={{ marginBottom: "20px" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <BiLogIn />
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="Enter your email address"
+                variant="outlined"
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                fullWidth
+              />
+            </Box>
+            <Box>
+              <TextField
+                label="Password"
+                size="small"
+                name="password"
+                type="password"
+                {...register("password")}
+                placeholder="Enter your password"
+                variant="outlined"
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                fullWidth
+              />
+            </Box>
+            <Box
+              sx={{ margin: "15px 0 10px 0", fontSize: 12, textAlign: "end" }}
             >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={<span className="text-white me-1">Password</span>}
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  min: 8,
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-            <p className="text-sm text-right text-white me-10">
-              <NavLink to="/forgetPassword" className="text-yellow-500">
-                Forget Password?
-              </NavLink>
-            </p>
-
-            <div className="text-center ">
-              <Button
-                type="primary"
-                htmlType="submit"
-                size="large"
-                className="w-100 mt-2 bg-blue-500"
+              <Typography
+                component="span"
+                sx={{ fontSize: 15, textAlign: "end" }}
               >
-                Login
-              </Button>
-            </div>
-            <p className="text-sm text-center mt-2 text-white ">
-              Don't have Account?
-              <NavLink to="/register" className="text-amber-400">
-                Register
-              </NavLink>
-            </p>
-          </Form>
-        </section>
-      </Col>
-      <Col xs={0} md={12} lg={12} className="rightPanel">
-        <img src={BgImage} alt="bgImage" />
-      </Col>
-    </Row>
+                <Link to="/forgetPassword">forget Password ?</Link>
+              </Typography>
+            </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ marginTop: "20px" }}
+              fullWidth
+              disabled={errors.email || errors.password ? true : false}
+              className="loginBtn"
+            >
+              Login
+            </Button>
+          </form>
+        </Paper>
+      </Box>
+    </div>
   );
 };
 

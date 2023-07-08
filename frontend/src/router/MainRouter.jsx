@@ -1,31 +1,22 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/home/Home";
-import Error404 from "../components/notFound/Error404";
+
 import Register from "../auth/register/Register";
 import Login from "../auth/login/Login";
 import ForgetPassword from "../auth/forget/ForgetPassword";
-import ProtectedRoute from "./ProtectedRoute";
 import CreateCategories from "../pages/category/CreateCategories";
-import CategoryList from "../pages/category/CategoryList";
-import Post from "../pages/post/Post";
-import CreatePost from "../pages/post/createPost/CreatePost";
 
 const MainRouter = () => {
   return (
     <React.Fragment>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/createCategories" element={<CreateCategories />} />
-          <Route path="/categoryList" element={<CategoryList />} />
-          <Route path="/createPost" element={<CreatePost />} />
-        </Route>
-        <Route path="/post" element={<Post />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgetPassword" element={<ForgetPassword />} />
-        <Route path="/*" element={<Error404 />} />
+        <Route path="/*" element={<>sdsd</>} />
+        <Route path="/createCategory" element={<CreateCategories />}></Route>
       </Routes>
     </React.Fragment>
   );

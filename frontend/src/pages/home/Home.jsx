@@ -1,12 +1,10 @@
 import React from "react";
-import Navbar from "../../components/navbar/Navbar";
-import LandingPage from "../../components/landingPage/LandingPage";
+import NavBar from "../../components/navbar/NavBar";
 
 const Home = () => {
   return (
     <React.Fragment>
-      <Navbar />
-      <LandingPage />
+      <NavBar />
     </React.Fragment>
   );
 };
